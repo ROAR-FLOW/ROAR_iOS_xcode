@@ -50,10 +50,22 @@ extension ViewController: GCDAsyncUdpSocketDelegate {
                         let splitted = string.components(separatedBy: ",")
                         let throttle = Float(splitted[0])
                         let steering = Float(splitted[1])
-
+                        
+                        // Jerry
+                        let kp = Float(splitted[2])
+                        let ki = Float(splitted[3])
+                        let kd = Float(splitted[4])
+                        
                         if throttle != nil && steering != nil {
                             self.controlCenter.control.throttle = throttle!
                             self.controlCenter.control.steering = steering!
+                        }
+                        
+                        // Jerry
+                        if kp != nil && ki != nil && kd != nil {
+                            self.controlCenter.control.kp = kp!
+                            self.controlCenter.control.ki = ki!
+                            self.controlCenter.control.kd = kd!
                         }
                     }
                 default:

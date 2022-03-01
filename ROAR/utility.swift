@@ -63,16 +63,29 @@ func findIPAddr() -> String {
 struct CustomControl {
     var throttle: Float = 0
     var steering: Float = 0
+    
+    // Jerry
+    var kp: Float = 0
+    var ki: Float = 0
+    var kd: Float = 0
+    
     init() {
         self.throttle = 0
         self.steering = 0
+        self.kp = 0
+        self.ki = 0
+        self.kd = 0
     }
-    init(throttle: Float, steering: Float) {
+    init(throttle: Float, steering: Float, kp: Float, ki: Float, kd: Float) {
         self.throttle = throttle.clamped(to: -1...1)
         self.steering = steering.clamped(to: -1...1)
+        // Jerry
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
     }
     
-    public var description: String { return "\(throttle), \(steering)" }
+    public var description: String { return "\(throttle), \(steering), \(kp), \(ki), \(kd)" }
     
     public var data: Data {
         return self.description.data(using: .utf8)!

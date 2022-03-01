@@ -639,13 +639,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 14;
-				DEVELOPMENT_TEAM = D9D2HSUW4S;
+				DEVELOPMENT_TEAM = XU8Z88S4A2;
 				INFOPLIST_FILE = ROAR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.berkeley.ROAR;
+				PRODUCT_BUNDLE_IDENTIFIER = com.berkeley.ROAR.Feb28;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -662,13 +662,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 14;
-				DEVELOPMENT_TEAM = D9D2HSUW4S;
+				DEVELOPMENT_TEAM = XU8Z88S4A2;
 				INFOPLIST_FILE = ROAR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.berkeley.ROAR;
+				PRODUCT_BUNDLE_IDENTIFIER = com.berkeley.ROAR.Feb28;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

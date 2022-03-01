@@ -86,6 +86,8 @@ class ControlCenter {
             vel_y = (node.position.y-self.transform.position.y) / time_diff
             vel_z = (node.position.z-self.transform.position.z) / time_diff
             
+            let recv_time = time - TimeInterval(Int(time / 1000) * 1000)
+            
             self.transform.position = node.position
             
             // yaw, roll, pitch DO NOT CHANGE THIS!
@@ -113,7 +115,7 @@ class ControlCenter {
                                          gx: gx,
                                          gy: gz,
                                          gz: gy,
-                                         recv_time:time
+                                         recv_time: recv_time
                                          
                 )
             }

@@ -24,6 +24,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, ScanQRCodeP
     @IBOutlet weak var arSceneView: ARSCNView!
     @IBOutlet weak var throttleLabel: UILabel!
     @IBOutlet weak var steeringLabel: UILabel!
+    @IBOutlet weak var pidLabel: UITextField!
     @IBOutlet weak var saveWorldButton: UIButton!
     @IBOutlet weak var recaliberateButton: UIButton!
     private var BLEautoReconnectTimer: Timer!
@@ -136,6 +137,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, ScanQRCodeP
     @objc func updateThrottleSteeringUI() {
         self.throttleLabel.text = String(format: "Throttle: %.2f", self.controlCenter.control.throttle)
         self.steeringLabel.text = String(format: "Steering: %.2f", self.controlCenter.control.steering)
+        self.pidLabel.text = String(format: "kp: %.2f, ki %.2f, kd:%.2f", self.controlCenter.control.kp, self.controlCenter.control.ki, self.controlCenter.control.kd)
+        print(String(format: "Throttle: %.2f", self.controlCenter.control.throttle))
+        print(String(format: "kp: %.2f, ki %.2f, kd:%.2f", self.controlCenter.control.kp, self.controlCenter.control.ki, self.controlCenter.control.kd))
     }
     @objc func autoReconnectBLE() {
         if AppInfo.sessionData.isBLEConnected == false {

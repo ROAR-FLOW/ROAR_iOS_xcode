@@ -46,8 +46,8 @@
                                     <action selector="onReCaliberateClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wYK-8M-frE"/>
                                 </connections>
                             </button>
-                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KNz-uL-o6X">
-                                <rect key="frame" x="22" y="114" width="352" height="642"/>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KNz-uL-o6X">
+                                <rect key="frame" x="22" y="148" width="352" height="608"/>
                             </arscnView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Throttle: 0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tzE-Iv-tRU">
                                 <rect key="frame" x="106" y="65" width="174" height="21"/>
@@ -81,6 +81,12 @@
                                     <action selector="onIPAddressBtnClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="88D-8Z-5aC"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="kp: 0, ki: 0, kd: 0" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Vvy-PK-2VR">
+                                <rect key="frame" x="42" y="106" width="292" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -113,6 +119,7 @@
                         <outlet property="arSceneView" destination="KNz-uL-o6X" id="16Z-cZ-1zv"/>
                         <outlet property="bleButton" destination="qJ9-Ql-yvG" id="feR-Xp-BPh"/>
                         <outlet property="ipAddressBtn" destination="JmS-Ug-1hK" id="wbJ-Jq-mq6"/>
+                        <outlet property="pidLabel" destination="Vvy-PK-2VR" id="Tvm-cm-6WA"/>
                         <outlet property="recaliberateButton" destination="Cbl-gY-tzm" id="K2Y-kk-GUw"/>
                         <outlet property="saveWorldButton" destination="PMZ-Mo-0U5" id="6ul-YT-gl5"/>
                         <outlet property="steeringLabel" destination="XDu-A4-1Vm" id="new-dI-qcC"/>
@@ -532,7 +539,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="0Cz-31-uV4"/>
+        <segue reference="zl6-I4-nJc"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="record.circle.fill" catalog="system" width="128" height="121"/>

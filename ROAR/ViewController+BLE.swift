@@ -8,6 +8,7 @@
 import Foundation
 import CoreBluetooth
 import UIKit
+import Loaf
 extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let services = peripheral.services {
@@ -93,12 +94,23 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
     
     func writeBLE() {
         if self.bluetoothPeripheral != nil && self.bluetoothPeripheral.state == .connected {
-            self.writeToBluetoothDevice(throttle: CGFloat(controlCenter.control.throttle), steering: CGFloat(controlCenter.control.steering))
+            self.writeToBluetoothDevice(
+                throttle: CGFloat(controlCenter.control.throttle),
+                steering: CGFloat(controlCenter.control.steering),
+                kp: CGFloat(controlCenter.control.kp),
+                ki: CGFloat(controlCenter.control.ki),
+                kd: CGFloat(controlCenter.control.kd)
+            )
         }
     }
-    func writeToBluetoothDevice(throttle: CGFloat, steering: CGFloat){
+    func writeToBluetoothDevice(throttle: CGFloat, steering: CGFloat, kp: CGFloat, ki: CGFloat, kd: CGFloat){
         let currThrottleRPM = throttle.map(from: self.iOSControllerRange, to: self.throttle_range)
         var currSteeringRPM = steering.map(from: self.iOSControllerRange, to: self.steer_range)
+        
+        // Jerry
+        var currKp = kp
+        var currKi = ki
+        var currKd = kd
         
         currSteeringRPM = currSteeringRPM.clamped(to: 1000...2000)
         
@@ -106,6 +118,22 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
         let message: String = "(" + String(Int(currThrottleRPM)) + "," + String(Int(currSteeringRPM)) + ")"
         if self.bluetoothPeripheral != nil {
             sendMessage(peripheral: self.bluetoothPeripheral, message: message)
+        }
+        
+        // Jerry: Send kp, ki, kd to bluetooth
+        // if BLE is connected, send the K values by turning them into little endian float.
+        if self.bluetoothPeripheral != nil && self.bleControlCharacteristic != nil {
+            var data = Data()
+            withUnsafePointer(to: &currKp) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
+            withUnsafePointer(to: &currKi) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
+            withUnsafePointer(to: &currKd) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
+            self.bluetoothPeripheral.writeValue(data, for: self.bleControlCharacteristic, type:.withoutResponse)
+//            Loaf.init("\(kp),\(kd),\(ki) sent", state: .success, location: .bottom, presentingDirection: .vertical, dismissingDirection: .vertical, sender: self).show()
+            print("send successfully")
+
+        } else {
+//            Loaf.init("Unable to send", state: .error, location: .bottom, presentingDirection: .vertical, dismissingDirection: .vertical, sender: self).show()
+            print("Unable to send")
         }
     }
     
