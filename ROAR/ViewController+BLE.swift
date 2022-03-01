@@ -122,15 +122,17 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
         
         // Jerry: Send kp, ki, kd to bluetooth
         // if BLE is connected, send the K values by turning them into little endian float.
-        if self.bluetoothPeripheral != nil && self.bleControlCharacteristic != nil {
+        if self.bluetoothPeripheral != nil {
             var data = Data()
             withUnsafePointer(to: &currKp) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
             withUnsafePointer(to: &currKi) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
             withUnsafePointer(to: &currKd) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
-            self.bluetoothPeripheral.writeValue(data, for: self.bleControlCharacteristic, type:.withoutResponse)
+            
+            if self.configCharacteristic != nil {
+                self.bluetoothPeripheral.writeValue(data, for: self.configCharacteristic, type:.withoutResponse)
+//                print("send successfully")
+            }
 //            Loaf.init("\(kp),\(kd),\(ki) sent", state: .success, location: .bottom, presentingDirection: .vertical, dismissingDirection: .vertical, sender: self).show()
-            print("send successfully")
-
         } else {
 //            Loaf.init("Unable to send", state: .error, location: .bottom, presentingDirection: .vertical, dismissingDirection: .vertical, sender: self).show()
             print("Unable to send")
@@ -152,6 +154,13 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
                 }
                 if char.uuid.uuidString == "19B10011-E8F2-537E-4F6C-D104768A1215" {
                     velocityCharacteristic = char
+                }
+                // Jerry
+                if char.uuid.uuidString == "19B10012-E8F2-537E-4F6C-D104768A1214" {
+                    newNameCharacteristic = char
+                }
+                if char.uuid.uuidString == "19B10011-E8F2-537E-4F6C-D104768A1216" {
+                    configCharacteristic = char
                 }
             }
         }

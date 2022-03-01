@@ -33,6 +33,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, ScanQRCodeP
     var logger: SwiftyBeaver.Type {return (UIApplication.shared.delegate as! AppDelegate).logger}
     var controlCenter: ControlCenter!
     var bluetoothPeripheral: CBPeripheral!
+  
     var centralManager: CBCentralManager!
     
     var iOSControllerRange: ClosedRange<CGFloat> = CGFloat(-1.0)...CGFloat(1.0);
@@ -42,6 +43,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, ScanQRCodeP
     var bluetoothDispatchWorkitem:DispatchWorkItem!
     var bleControlCharacteristic: CBCharacteristic!
     var velocityCharacteristic: CBCharacteristic!
+    var newNameCharacteristic: CBCharacteristic!
+    var configCharacteristic: CBCharacteristic!
     var updateThrottleSteeringUITimer: Timer!
     
     // UDP sockets
@@ -138,8 +141,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, ScanQRCodeP
         self.throttleLabel.text = String(format: "Throttle: %.2f", self.controlCenter.control.throttle)
         self.steeringLabel.text = String(format: "Steering: %.2f", self.controlCenter.control.steering)
         self.pidLabel.text = String(format: "kp: %.2f, ki %.2f, kd:%.2f", self.controlCenter.control.kp, self.controlCenter.control.ki, self.controlCenter.control.kd)
-        print(String(format: "Throttle: %.2f", self.controlCenter.control.throttle))
-        print(String(format: "kp: %.2f, ki %.2f, kd:%.2f", self.controlCenter.control.kp, self.controlCenter.control.ki, self.controlCenter.control.kd))
+//        print(String(format: "Throttle: %.2f", self.controlCenter.control.throttle))
+//        print(String(format: "kp: %.2f, ki %.2f, kd:%.2f", self.controlCenter.control.kp, self.controlCenter.control.ki, self.controlCenter.control.kd))
     }
     @objc func autoReconnectBLE() {
         if AppInfo.sessionData.isBLEConnected == false {
