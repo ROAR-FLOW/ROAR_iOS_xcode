@@ -25,6 +25,11 @@ class ControlCenter {
     
     public var vc: ViewController!
     
+    public var fileName = "data.csv";
+    public var dataArray : [String] = []
+    public var tmpArrayValue = String();
+   
+    
     private var prevTransformUpdateTime: TimeInterval?;
     let motion = CMMotionManager()
     
@@ -44,11 +49,35 @@ class ControlCenter {
     
     func start(shouldStartServer: Bool = true){
         if shouldStartServer {
-            
+            // create csv meta data
+            let csvHeader = "recv_time,vx,vy,vz,ax,ay,az,x,y,z\n"
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MM-dd_HH-mm-ss"
+            let dateString = formatter.string(from: Date())
+            self.fileName =  "flow_data_"+dateString+".csv"
+            createCSV(text: csvHeader, toDirectory: self.getDocumentDirectory(), withFileName: fileName)
         }
     }
     func stop(){
-
+        // save csv file
+        printCSV(fromDocumentsWithFileName: self.fileName)
+        
+        guard let filePath = self.append(toPath: self.getDocumentDirectory(),
+                                         withPathComponent: self.fileName) else {
+                                            return
+        }
+        
+        if FileManager.default.fileExists(atPath: filePath) {
+            if let fileHandle = try? FileHandle(forWritingAtPath: filePath) { 
+                 fileHandle.seekToEndOfFile()
+                dataArray.forEach{ tmp in
+                    guard let tmpData = tmp.data(using: String.Encoding.utf8) else {return}
+                    fileHandle.write(tmpData)
+                }
+                 fileHandle.closeFile()
+             }
+        }
+        
     }
     
     
@@ -118,11 +147,79 @@ class ControlCenter {
                                          recv_time: recv_time
                                          
                 )
+                // let csvHeader = "recv_time,vx,vy,vz,ax,ay,az,x,y,z\n"
+                self.tmpArrayValue = "\(recv_time),\(vel_x),\(vel_y),\(vel_z),\(ax),\(ay),\(az),\(transform.position.x),\(transform.position.y),\(transform.position.z)\n"
+                
             }
-            
+            // update csv
+            self.dataArray.append(tmpArrayValue)
+    
            
 //            print("vx: \(vel_x) | vy: \(vel_y) | vz: \(vel_z)")
             prevTransformUpdateTime = time
         }
     }
+    
+//    private func documentDirectory() -> String {
+//        let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory,
+//                                                                    .userDomainMask,
+//                                                                    true)
+//        return documentDirectory[0]
+//    }
+    
+    private func getDocumentDirectory() -> String {
+        let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                                    .userDomainMask,
+                                                                    true)
+        return documentDirectory[0]
+    }
+    
+    private func append(toPath path: String,
+                        withPathComponent pathComponent: String) -> String? {
+        if var pathURL = URL(string: path) {
+            pathURL.appendPathComponent(pathComponent)
+            
+            return pathURL.absoluteString
+        }
+        
+        return nil
+    }
+    
+    private func createCSV(text: String,
+                      toDirectory directory: String,
+                      withFileName fileName: String) {
+        guard let filePath = self.append(toPath: directory,
+                                         withPathComponent: fileName) else {
+            return
+        }
+        
+        do {
+            try text.write(toFile: filePath,
+                           atomically: true,
+                           encoding: .utf8)
+        } catch {
+            print("Error", error)
+            return
+        }
+        
+        print("Save successful")
+    }
+    
+    private func printCSV(fromDocumentsWithFileName fileName: String) {
+        guard let filePath = self.append(toPath: self.getDocumentDirectory(),
+                                         withPathComponent: fileName) else {
+                                            return
+        }
+        
+        do {
+            let savedString = try String(contentsOfFile: filePath)
+            
+            print(savedString)
+        } catch {
+            print("Error reading saved file")
+        }
+    }
+    
 }
+
+

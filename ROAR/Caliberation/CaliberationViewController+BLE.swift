@@ -131,6 +131,17 @@ extension CaliberationViewController:CBCentralManagerDelegate, CBPeripheralDeleg
                 self.velocity_label.text = "Current Velocity: \(self.velocity)"
             }
         }
+
+        if characteristic == throtReturnCharacteristic {
+            // catch a throttle change and update the throttle label
+            guard let throt = characteristic.value else { return }
+            self.throtReturn = throt.withUnsafeBytes { $0.load(as: Float.self) }
+//            print("the returned throttle is: \(self.throtReturn)")
+            DispatchQueue.main.async {
+                self.throt_return_label.text = "Current throttle: \(self.throtReturn)"
+
+            }
+        }
     }
     
     func sendBLENewName(peripheral: CBPeripheral, message: String){
