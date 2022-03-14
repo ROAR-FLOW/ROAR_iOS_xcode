@@ -94,6 +94,7 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
     
     func writeBLE() {
         if self.bluetoothPeripheral != nil && self.bluetoothPeripheral.state == .connected {
+            
             self.writeToBluetoothDevice(
                 throttle: CGFloat(controlCenter.control.throttle),
                 steering: CGFloat(controlCenter.control.steering),

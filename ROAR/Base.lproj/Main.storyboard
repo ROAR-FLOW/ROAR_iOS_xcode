@@ -390,7 +390,7 @@
                         <outlet property="requestBLENameChangeButton" destination="khP-Y9-TUR" id="yzo-3n-pNx"/>
                         <outlet property="sendControlBtn" destination="hdu-5M-tmK" id="oDN-1z-yWk"/>
                         <outlet property="sendKValuesBtn" destination="dWq-Ht-SRu" id="6pI-d5-m8C"/>
-                        <outlet property="throt_return_label" destination="MIx-cX-MIk" id="OZU-zN-iGz"/>
+                        <outlet property="throt_return_label" destination="MIx-cX-MIk" id="1WP-Ic-Qab"/>
                         <outlet property="throttleTextField" destination="id0-tK-Dkm" id="3Ux-VZ-m4E"/>
                         <outlet property="velocity_label" destination="WxQ-pS-nQs" id="B9x-IM-3Yd"/>
                     </connections>

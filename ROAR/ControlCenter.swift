@@ -28,6 +28,8 @@ class ControlCenter {
     public var fileName = "data.csv";
     public var dataArray : [String] = []
     public var tmpArrayValue = String();
+    
+    public var pidHasWritten = false;
    
     
     private var prevTransformUpdateTime: TimeInterval?;
@@ -50,7 +52,7 @@ class ControlCenter {
     func start(shouldStartServer: Bool = true){
         if shouldStartServer {
             // create csv meta data
-            let csvHeader = "recv_time,vx,vy,vz,ax,ay,az,x,y,z,curr_velocity\n"
+            let csvHeader = "recv_time,vx,vy,vz,ax,ay,az,x,y,z,curr_velocity, target_velocity,kp,ki,kd\n"
             let formatter = DateFormatter()
             formatter.dateFormat = "MM-dd_HH-mm-ss"
             let dateString = formatter.string(from: Date())
@@ -148,7 +150,7 @@ class ControlCenter {
                                          
                 )
                 // let csvHeader = "recv_time,vx,vy,vz,ax,ay,az,x,y,z\n"
-                self.tmpArrayValue = "\(recv_time),\(vel_x),\(vel_y),\(vel_z),\(ax),\(ay),\(az),\(transform.position.x),\(transform.position.y),\(transform.position.z), \(self.vehicleState.hall_effect_sensor_velocity)\n"
+                self.tmpArrayValue = "\(recv_time),\(vel_x),\(vel_y),\(vel_z),\(ax),\(ay),\(az),\(transform.position.x),\(transform.position.y),\(transform.position.z), \(self.vehicleState.hall_effect_sensor_velocity), \(self.control.throttle * 5), \(self.control.kp),\(self.control.ki),\(self.control.kd)\n"
                 
             }
             // update csv

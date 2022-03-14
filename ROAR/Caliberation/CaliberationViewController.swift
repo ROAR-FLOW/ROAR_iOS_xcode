@@ -24,6 +24,7 @@ class CaliberationViewController: UIViewController {
     @IBOutlet weak var KiTextField: UITextField!
     @IBOutlet weak var KdTextField: UITextField!
     @IBOutlet weak var velocity_label: UILabel!
+    @IBOutlet weak var throt_return_label: UILabel!
     var bluetoothPeripheral: CBPeripheral!
     var centralManager: CBCentralManager!
     
@@ -37,10 +38,11 @@ class CaliberationViewController: UIViewController {
     var bluetoothDispatchWorkitem:DispatchWorkItem!
     var bleControlCharacteristic: CBCharacteristic!
     var velocityCharacteristic: CBCharacteristic!
-//    var throtReturnCharacteristic: CBCharacteristic!
+    var throtReturnCharacteristic: CBCharacteristic!
     var configCharacteristic: CBCharacteristic!
     var newNameCharacteristic: CBCharacteristic!
     var velocity: Float = 0
+    var throtReturn: Float = 0
     
     var readVelocityTimer: Timer!
     
