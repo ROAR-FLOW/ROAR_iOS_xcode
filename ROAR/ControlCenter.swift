@@ -50,7 +50,7 @@ class ControlCenter {
     func start(shouldStartServer: Bool = true){
         if shouldStartServer {
             // create csv meta data
-            let csvHeader = "recv_time,vx,vy,vz,ax,ay,az,x,y,z\n"
+            let csvHeader = "recv_time,vx,vy,vz,ax,ay,az,x,y,z,curr_velocity\n"
             let formatter = DateFormatter()
             formatter.dateFormat = "MM-dd_HH-mm-ss"
             let dateString = formatter.string(from: Date())
@@ -148,7 +148,7 @@ class ControlCenter {
                                          
                 )
                 // let csvHeader = "recv_time,vx,vy,vz,ax,ay,az,x,y,z\n"
-                self.tmpArrayValue = "\(recv_time),\(vel_x),\(vel_y),\(vel_z),\(ax),\(ay),\(az),\(transform.position.x),\(transform.position.y),\(transform.position.z)\n"
+                self.tmpArrayValue = "\(recv_time),\(vel_x),\(vel_y),\(vel_z),\(ax),\(ay),\(az),\(transform.position.x),\(transform.position.y),\(transform.position.z), \(self.vehicleState.hall_effect_sensor_velocity)\n"
                 
             }
             // update csv

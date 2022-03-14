@@ -37,6 +37,7 @@ class CaliberationViewController: UIViewController {
     var bluetoothDispatchWorkitem:DispatchWorkItem!
     var bleControlCharacteristic: CBCharacteristic!
     var velocityCharacteristic: CBCharacteristic!
+//    var throtReturnCharacteristic: CBCharacteristic!
     var configCharacteristic: CBCharacteristic!
     var newNameCharacteristic: CBCharacteristic!
     var velocity: Float = 0
