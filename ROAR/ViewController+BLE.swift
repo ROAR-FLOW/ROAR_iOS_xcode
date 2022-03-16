@@ -81,8 +81,11 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     func readFromBLE() {
-        if velocityCharacteristic != nil {
-            self.bluetoothPeripheral.readValue(for: self.velocityCharacteristic)
+//        if velocityCharacteristic != nil {
+//            self.bluetoothPeripheral.readValue(for: self.velocityCharacteristic)
+//        }
+        if throtReturnCharacteristic != nil {
+            self.bluetoothPeripheral.readValue(for: self.throtReturnCharacteristic)
         }
     }
     func disconnectBluetooth() {
@@ -163,6 +166,9 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
                 if char.uuid.uuidString == "19B10011-E8F2-537E-4F6C-D104768A1216" {
                     configCharacteristic = char
                 }
+                if char.uuid.uuidString == "19B10011-E8F2-537E-4F6C-D104768A1217" {
+                    throtReturnCharacteristic = char
+                }
             }
         }
     }
@@ -172,10 +178,39 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
                 print("ERROR didUpdateValue \(e)")
                 return
             }
-        if characteristic == velocityCharacteristic {
-            guard let data = characteristic.value else { return }
-            let velocity = data.withUnsafeBytes { $0.load(as: Float.self) }
-            self.controlCenter.vehicleState.hall_effect_sensor_velocity = velocity
+//        if characteristic == velocityCharacteristic {
+//            guard let data = characteristic.value else { return }
+//            let velocity = data.withUnsafeBytes { $0.load(as: Float.self) }
+//            self.controlCenter.vehicleState.hall_effect_sensor_velocity = velocity
+//        }
+        
+        if characteristic == throtReturnCharacteristic {
+//            guard let data = characteristic.value else { return }
+//            let combined_float = data.withUnsafeBytes { $0.load(as: Float.self) }
+//            print("Combined Float is:\(combined_float)")
+            
+            var throttle_float: Float = 0.2
+            var velocity_float: Float = -0.2
+
+            guard var data = characteristic.value else { return }
+            print("Raw Data")
+            print(data as NSData)
+
+            withUnsafePointer(to: &throttle_float) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
+            withUnsafePointer(to: &velocity_float) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
+            
+            let velocity_decoded: Float = data.withUnsafeBytes {
+                $0.load(fromByteOffset: 0, as: Float.self)
+            }
+            let throttle_decoded: Float = data.withUnsafeBytes {
+                $0.load(fromByteOffset: 4, as: Float.self)
+            }
+            
+            print("Throttle initialized is \(throttle_float) throttle after decoded \(throttle_decoded).")
+            print("Velocity initialized is \(velocity_float) Velocity after decoded \(velocity_decoded).")
+            self.controlCenter.vehicleState.hall_effect_sensor_velocity = velocity_decoded
+            self.controlCenter.vehicleState.car_throttle = throttle_decoded
+ 
         }
     }
     
