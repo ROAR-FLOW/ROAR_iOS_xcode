@@ -29,6 +29,8 @@ class ControlCenter {
     public var dataArray : [String] = []
     public var tmpArrayValue = String();
     
+    public var dataHasWritten = false;
+
     public var pidHasWritten = false;
    
     
@@ -153,8 +155,17 @@ class ControlCenter {
                 self.tmpArrayValue = "\(recv_time),\(vel_x),\(vel_y),\(vel_z),\(ax),\(ay),\(az),\(transform.position.x),\(transform.position.y),\(transform.position.z), \(self.vehicleState.hall_effect_sensor_velocity), \(self.control.throttle * 5), \(self.control.kp),\(self.control.ki),\(self.control.kd), \(self.vehicleState.car_throttle)\n"
                 
             }
-            // update csv
-            self.dataArray.append(tmpArrayValue)
+            
+            if self.vehicleState.hall_effect_sensor_velocity > 0 {
+                dataHasWritten = true
+            }
+            
+            if dataHasWritten == true {
+                // update csv
+                self.dataArray.append(tmpArrayValue)
+            }
+            
+
     
            
 //            print("vx: \(vel_x) | vy: \(vel_y) | vz: \(vel_z)")
