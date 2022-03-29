@@ -71,6 +71,7 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
                     // TODO reconnect every 5 seconds
                     if AppInfo.sessionData.isBLEConnected {
                         self.writeBLE()
+                        self.writePIDToBLE()
                         self.readFromBLE()
                     }
                 }
@@ -100,29 +101,41 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
             
             self.writeToBluetoothDevice(
                 throttle: CGFloat(controlCenter.control.throttle),
-                steering: CGFloat(controlCenter.control.steering),
+                steering: CGFloat(controlCenter.control.steering)
+            )
+        }
+    }
+    
+    func writePIDToBLE() {
+        if self.bluetoothPeripheral != nil && self.bluetoothPeripheral.state == .connected {
+            self.writePIDToBluetoothDevice(
                 kp: CGFloat(controlCenter.control.kp),
                 ki: CGFloat(controlCenter.control.ki),
                 kd: CGFloat(controlCenter.control.kd)
             )
         }
     }
-    func writeToBluetoothDevice(throttle: CGFloat, steering: CGFloat, kp: CGFloat, ki: CGFloat, kd: CGFloat){
+    
+    
+    func writeToBluetoothDevice(throttle: CGFloat, steering: CGFloat){
         let currThrottleRPM = throttle.map(from: self.iOSControllerRange, to: self.throttle_range)
         var currSteeringRPM = steering.map(from: self.iOSControllerRange, to: self.steer_range)
         
-        // Jerry
-        var currKp = kp
-        var currKi = ki
-        var currKd = kd
         
         currSteeringRPM = currSteeringRPM.clamped(to: 1000...2000)
-        
         
         let message: String = "(" + String(Int(currThrottleRPM)) + "," + String(Int(currSteeringRPM)) + ")"
         if self.bluetoothPeripheral != nil {
             sendMessage(peripheral: self.bluetoothPeripheral, message: message)
         }
+    }
+    
+    func writePIDToBluetoothDevice(kp: CGFloat, ki: CGFloat, kd: CGFloat){
+        
+        // Jerry
+        var currKp = Float(kp)
+        var currKi = Float(ki)
+        var currKd = Float(kd)
         
         // Jerry: Send kp, ki, kd to bluetooth
         // if BLE is connected, send the K values by turning them into little endian float.
@@ -131,14 +144,15 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
             withUnsafePointer(to: &currKp) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
             withUnsafePointer(to: &currKi) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
             withUnsafePointer(to: &currKd) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
-            
+//            if self.bleControlCharacteristic != nil {
+//                self.bluetoothPeripheral.writeValue(data, for: self.bleControlCharacteristic, type:.withoutResponse)
+//                print("send successfully")
+//            }
             if self.configCharacteristic != nil {
                 self.bluetoothPeripheral.writeValue(data, for: self.configCharacteristic, type:.withoutResponse)
-//                print("send successfully")
+                print("send successfully")
             }
-//            Loaf.init("\(kp),\(kd),\(ki) sent", state: .success, location: .bottom, presentingDirection: .vertical, dismissingDirection: .vertical, sender: self).show()
         } else {
-//            Loaf.init("Unable to send", state: .error, location: .bottom, presentingDirection: .vertical, dismissingDirection: .vertical, sender: self).show()
             print("Unable to send")
         }
     }
@@ -147,8 +161,9 @@ extension ViewController:CBCentralManagerDelegate, CBPeripheralDelegate {
         if bleControlCharacteristic != nil {
             peripheral.writeValue(message.data(using: .utf8)!, for: bleControlCharacteristic, type: .withoutResponse)
         }
-        
+
     }
+    
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let characteristics = service.characteristics {
