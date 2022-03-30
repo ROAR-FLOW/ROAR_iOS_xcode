@@ -66,8 +66,8 @@ extension CaliberationViewController:CBCentralManagerDelegate, CBPeripheralDeleg
     
     @objc
     func readVelocity() {
-        if velocityCharacteristic != nil {
-            self.bluetoothPeripheral.readValue(for: self.velocityCharacteristic)
+        if throtReturnCharacteristic != nil {
+            self.bluetoothPeripheral.readValue(for: self.throtReturnCharacteristic)
         }
     }
     func disconnectBluetooth() {
@@ -114,32 +114,66 @@ extension CaliberationViewController:CBCentralManagerDelegate, CBPeripheralDeleg
                 if char.uuid.uuidString == "19B10011-E8F2-537E-4F6C-D104768A1216" {
                     configCharacteristic = char 
                 }
+                if char.uuid.uuidString == "19B10011-E8F2-537E-4F6C-D104768A1217" {
+                    throtReturnCharacteristic = char
+                }
             }
         }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+//        print("Hei Hei Hei Hei Hei")
+//        print(characteristic)
         if let e = error {
                 print("ERROR didUpdateValue \(e)")
                 return
             }
-        if characteristic == velocityCharacteristic {
-            // catch a velocity change and update the velocity label
-            guard let data = characteristic.value else { return }
-            self.velocity = data.withUnsafeBytes { $0.load(as: Float.self) }
-            DispatchQueue.main.async {
-                self.velocity_label.text = "Current Velocity: \(self.velocity)"
-            }
-        }
+//        if characteristic == velocityCharacteristic {
+//            // catch a velocity change and update the velocity label
+//            guard let data = characteristic.value else { return }
+//            self.velocity = data.withUnsafeBytes { $0.load(as: Float.self) }
+//            DispatchQueue.main.async {
+//                self.velocity_label.text = "Current Velocity: \(self.velocity)"
+//            }
+//        }
 
         if characteristic == throtReturnCharacteristic {
-            // catch a throttle change and update the throttle label
-            guard let throt = characteristic.value else { return }
-            self.throtReturn = throt.withUnsafeBytes { $0.load(as: Float.self) }
-//            print("the returned throttle is: \(self.throtReturn)")
-            DispatchQueue.main.async {
-                self.throt_return_label.text = "Current throttle: \(self.throtReturn)"
+//            // catch a throttle change and update the throttle label
+//            guard let throt = characteristic.value else { return }
+//            self.throtReturn = throt.withUnsafeBytes { $0.load(as: Float.self) }
+////            print("the returned throttle is: \(self.throtReturn)")
+//            DispatchQueue.main.async {
+//                self.throt_return_label.text = "Current throttle: \(self.throtReturn)"
+//        }
+//            print("hahahahahahahahahahahah")
+            var throttle_float: Float = 0.2
+            var velocity_float: Float = -0.2
 
+            guard var data = characteristic.value else { return }
+            print("Raw Data")
+            print(data as NSData)
+
+            withUnsafePointer(to: &throttle_float) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
+            withUnsafePointer(to: &velocity_float) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
+            
+            let velocity_decoded: Float = data.withUnsafeBytes {
+                $0.load(fromByteOffset: 0, as: Float.self)
+            }
+            let throttle_decoded: Float = data.withUnsafeBytes {
+                $0.load(fromByteOffset: 4, as: Float.self)
+            }
+            
+            print("Throttle initialized is \(throttle_float) throttle after decoded \(throttle_decoded).")
+            print("Velocity initialized is \(velocity_float) Velocity after decoded \(velocity_decoded).")
+//            self.controlCenter.vehicleState.hall_effect_sensor_velocity = velocity_decoded
+//            self.controlCenter.vehicleState.car_throttle = throttle_decoded
+            print("throttle decoded is:\(throttle_decoded)")
+//            DispatchQueue.main.async {
+//                self.throt_return_label.text = "Current throttle: \(throttle_decoded)"
+//            }
+            DispatchQueue.main.async {
+                self.throt_return_label.text = "Current throttle: \(throttle_decoded)"
+                self.velocity_label.text = "Current Velocity: \(velocity_decoded)"
             }
         }
     }

@@ -45,7 +45,8 @@ class CaliberationViewController: UIViewController {
     var throtReturn: Float = 0
     
     var readVelocityTimer: Timer!
-    
+    var start_time: Double = 0
+    var current_time: Double = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround() 
@@ -83,14 +84,36 @@ class CaliberationViewController: UIViewController {
         // First extract throttle and steering values from text field and cast it into CGFloat
         let throttle = CGFloat(Float(self.throttleTextField.text ?? "0") ?? 0)
         let steering = CGFloat(Float(self.SteeringTextField.text ?? "0") ?? 0)
+        let start_time = TimeInterval(NSDate().timeIntervalSince1970)
+        self.start_time = start_time
+        startWritingToBLE(steering: steering)
         // if ble is connected, use legacy method to send ble values
         if self.bluetoothPeripheral != nil && self.configCharacteristic != nil {
             self.writeToBluetoothDevice(throttle: throttle, steering: steering)
-            Loaf.init("\(throttle),\(steering) sent", state: .success, location: .bottom, presentingDirection: .vertical, dismissingDirection: .vertical, sender: self).show()
+//            Loaf.init("\(throttle),\(steering) sent", state: .success, location: .bottom, presentingDirection: .vertical, dismissingDirection: .vertical, sender: self).show()
         } else {
-            Loaf.init("Unable to send", state: .error, location: .bottom, presentingDirection: .vertical, dismissingDirection: .vertical, sender: self).show()
+//            Loaf.init("Unable to send", state: .error, location: .bottom, presentingDirection: .vertical, dismissingDirection: .vertical, sender: self).show()
         }
         
+    }
+    
+    func startWritingToBLE(steering: CGFloat) {
+        DispatchQueue.global(qos: .background).async {
+            self.bleTimer = Timer(timeInterval: 0.01, repeats: true) { _ in
+                    // TODO reconnect every 5 seconds
+                    if AppInfo.sessionData.isBLEConnected {
+                        self.current_time += 0.01
+                        let throttle = sin(self.current_time) + 1
+
+                        if self.bluetoothPeripheral != nil && self.configCharacteristic != nil {
+                            self.writeToBluetoothDevice(throttle: throttle, steering: steering)
+                        }
+                    }
+                }
+                let runLoop = RunLoop.current
+                runLoop.add(self.bleTimer, forMode: .default)
+                runLoop.run()
+            }
     }
     
     @IBAction func onBLENameChangeBtn(_ sender: UIButton) {
