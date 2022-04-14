@@ -150,8 +150,7 @@ extension CaliberationViewController:CBCentralManagerDelegate, CBPeripheralDeleg
             var velocity_float: Float = -0.2
 
             guard var data = characteristic.value else { return }
-            print("Raw Data")
-            print(data as NSData)
+          
 
             withUnsafePointer(to: &throttle_float) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
             withUnsafePointer(to: &velocity_float) { data.append(UnsafeBufferPointer(start: $0, count: 1)) }
@@ -163,11 +162,9 @@ extension CaliberationViewController:CBCentralManagerDelegate, CBPeripheralDeleg
                 $0.load(fromByteOffset: 4, as: Float.self)
             }
             
-            print("Throttle initialized is \(throttle_float) throttle after decoded \(throttle_decoded).")
-            print("Velocity initialized is \(velocity_float) Velocity after decoded \(velocity_decoded).")
-//            self.controlCenter.vehicleState.hall_effect_sensor_velocity = velocity_decoded
-//            self.controlCenter.vehicleState.car_throttle = throttle_decoded
-            print("throttle decoded is:\(throttle_decoded)")
+           
+            
+            self.velocity = Double(velocity_decoded)
 //            DispatchQueue.main.async {
 //                self.throt_return_label.text = "Current throttle: \(throttle_decoded)"
 //            }

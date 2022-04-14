@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		97C1419027FBB0DB003E2984 /* final_deliver.csv in Resources */ = {isa = PBXBuildFile; fileRef = 97C1418F27FBB0DB003E2984 /* final_deliver.csv */; };
 		A09F224246A0E2AF2FBB6D81 /* Pods_ROAR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A498B2D702D7CB6768B7DD47 /* Pods_ROAR.framework */; };
 		E821AECB27274AF1009F49D2 /* ScanQRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E821AECA27274AF1009F49D2 /* ScanQRCodeViewController.swift */; };
 		E83E6CA126ED57BF006B1E39 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E83E6CA026ED57BF006B1E39 /* AppDelegate.swift */; };
@@ -68,6 +69,7 @@
 
 /* Begin PBXFileReference section */
 		17661342EC3F52CA53CAC51B /* Pods-ROAR.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ROAR.debug.xcconfig"; path = "Target Support Files/Pods-ROAR/Pods-ROAR.debug.xcconfig"; sourceTree = "<group>"; };
+		97C1418F27FBB0DB003E2984 /* final_deliver.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = final_deliver.csv; sourceTree = "<group>"; };
 		A498B2D702D7CB6768B7DD47 /* Pods_ROAR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ROAR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA70681EA7FA776D886D4DC2 /* Pods-ROAR.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ROAR.release.xcconfig"; path = "Target Support Files/Pods-ROAR/Pods-ROAR.release.xcconfig"; sourceTree = "<group>"; };
 		E821AECA27274AF1009F49D2 /* ScanQRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanQRCodeViewController.swift; sourceTree = "<group>"; };
@@ -255,6 +257,7 @@
 			isa = PBXGroup;
 			children = (
 				E8EEB83927B4DF2C0045F7AC /* CaliberationViewController.swift */,
+				97C1418F27FBB0DB003E2984 /* final_deliver.csv */,
 				E8EEB83B27B4E0A80045F7AC /* CaliberationViewController+BLE.swift */,
 			);
 			path = Caliberation;
@@ -388,6 +391,7 @@
 				E88C3796270557F800289DC1 /* models.scnassets in Resources */,
 				E88C37A62705594800289DC1 /* ARPhoto2.storyboard in Resources */,
 				E83E6CA826ED57BF006B1E39 /* Main.storyboard in Resources */,
+				97C1419027FBB0DB003E2984 /* final_deliver.csv in Resources */,
 				E8C8EC922737A5F300CB2683 /* ChooseBLE.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -565,7 +569,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -620,7 +624,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

@@ -64,7 +64,7 @@ class ControlCenter {
     }
     func stop(){
         // save csv file
-        printCSV(fromDocumentsWithFileName: self.fileName)
+//        printCSV(fromDocumentsWithFileName: self.fileName)
         
         guard let filePath = self.append(toPath: self.getDocumentDirectory(),
                                          withPathComponent: self.fileName) else {
