@@ -11,13 +11,14 @@ import CoreBluetooth
 import SwiftyBeaver
 import Loaf
 import TabularData
-
+import ARKit
 class CaliberationViewController: UIViewController {
     @IBOutlet weak var bleButton: UIButton!
     @IBOutlet weak var sendControlBtn: UIButton!
     @IBOutlet weak var sendKValuesBtn: UIButton!
     @IBOutlet weak var requestBLENameChangeButton: UIButton!
     @IBOutlet weak var newBLENameTextField: UITextField!
+    @IBOutlet weak var cali_AR: ARSCNView!
     @IBOutlet weak var throttleTextField: UITextField!
     @IBOutlet weak var SteeringTextField: UITextField!
     @IBOutlet weak var KpTextField: UITextField!
@@ -25,11 +26,14 @@ class CaliberationViewController: UIViewController {
     @IBOutlet weak var KdTextField: UITextField!
     @IBOutlet weak var velocity_label: UILabel!
     @IBOutlet weak var throt_return_label: UILabel!
+//    var controlCenter: ControlCenter!
+    public var backCamImage: CustomImage!
+    public var worldCamDepth: CustomDepthData!
     var bluetoothPeripheral: CBPeripheral!
     var centralManager: CBCentralManager!
     
     var logger: SwiftyBeaver.Type {return (UIApplication.shared.delegate as! AppDelegate).logger}
-
+    public var transform: CustomTransform = CustomTransform()
     var ThrottleControllerRange: ClosedRange<CGFloat> = CGFloat(-5.0)...CGFloat(5.0);
     var SteeringControllerRange: ClosedRange<CGFloat> = CGFloat(-1.0)...CGFloat(1.0);
     let throttle_range = CGFloat(1000)...CGFloat(2000)
@@ -43,7 +47,7 @@ class CaliberationViewController: UIViewController {
     var newNameCharacteristic: CBCharacteristic!
     var velocity: Double = 0
     var throtReturn: Float = 0
-    
+    private var prevTransformUpdateTime: TimeInterval?;
     var readVelocityTimer: Timer!
     var start_time: Double = 0
     var current_time: Double = 0
@@ -63,7 +67,18 @@ class CaliberationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.hideKeyboardWhenTappedAround() 
+        self.hideKeyboardWhenTappedAround()
+        self.backCamImage = CustomImage(compressionQuality: 0.005, ratio: .no_cut)//AppInfo.imageRatio)
+        self.worldCamDepth = CustomDepthData()
+        if let mapData = UserDefaults.standard.value(forKey: AppInfo.get_ar_experience_name()) as? Data {
+            if let map = loadMap(data: mapData) {
+                self.startARSession(worldMap: map, worldOriginTransform: nil)
+            } else {
+                self.startARSession(worldMap: nil, worldOriginTransform: nil)
+            }
+        } else {
+            self.startARSession(worldMap: nil, worldOriginTransform: nil)
+        }
         self.centralManager = CBCentralManager(delegate: self, queue: nil)
         self.bleTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(autoReconnectBLE), userInfo: nil, repeats: true)
         let url = Bundle.main.url(forResource: "final_deliver", withExtension: "csv")!
@@ -83,6 +98,16 @@ class CaliberationViewController: UIViewController {
         
         
     }
+    
+    func loadMap(data:Data) -> ARWorldMap? {
+        do {
+            guard let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) else { return nil }
+            return worldMap
+        } catch {
+            return nil
+        }
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -279,6 +304,39 @@ class CaliberationViewController: UIViewController {
             print(savedString)
         } catch {
             print("Error reading saved file")
+        }
+    }
+    
+    
+    public func updateBackCam(frame:ARFrame) {
+        if self.backCamImage.updating == false {
+            self.backCamImage.updateImage(cvPixelBuffer: frame.capturedImage)
+            self.backCamImage.updateIntrinsics(intrinsics: frame.camera.intrinsics)
+        }
+    }
+    public func updateBackCam(cvpixelbuffer:CVPixelBuffer, rotationDegree:Float=90) {
+        if self.backCamImage.updating == false {
+            self.backCamImage.updateImage(cvPixelBuffer: cvpixelbuffer)
+        }
+    }
+    public func updateWorldCamDepth(frame: ARFrame) {
+        if self.worldCamDepth.updating == false {
+            self.worldCamDepth.update(frame: frame)
+        }
+    }
+    public func updateTransform(pointOfView: SCNNode) {
+        let node = pointOfView
+        let time = TimeInterval(NSDate().timeIntervalSince1970)
+        if prevTransformUpdateTime == nil {
+            prevTransformUpdateTime = time
+        } else {
+            
+            
+            self.transform.position = node.position
+            
+            // yaw, roll, pitch DO NOT CHANGE THIS!
+            self.transform.eulerAngle = SCNVector3(node.eulerAngles.z, node.eulerAngles.y, node.eulerAngles.x)
+            prevTransformUpdateTime = time
         }
     }
     
