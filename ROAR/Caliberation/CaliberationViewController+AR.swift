@@ -107,8 +107,18 @@ extension CaliberationViewController:  ARSCNViewDelegate, ARSessionDelegate, ARS
                 if imageAnchor.name == "BerkeleyLogo" {
                     // imageAnchor.transform
                     // logic here
-                    print(imageAnchor.transform)
+//                    print(imageAnchor.transform)
+//                    let position = SCNVector3(
+//                        imageAnchor.transform.columns.3.x,
+//                        imageAnchor.transform.columns.3.y,
+//                        imageAnchor.transform.columns.3.z
+//                    )
+                    print("x:\(imageAnchor.transform.columns.3.x)") //左右，往左变大，往右变小
+                    print("y:\(imageAnchor.transform.columns.3.y)") // 上下，往上变小，往下变大
+                    print("z:\(imageAnchor.transform.columns.3.z)") // 前后， 往后变小，往前变大
+                    print("")
                 }
+
             }
         }
     }

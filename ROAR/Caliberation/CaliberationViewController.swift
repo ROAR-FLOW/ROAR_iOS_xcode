@@ -25,7 +25,7 @@ class CaliberationViewController: UIViewController {
     @IBOutlet weak var KiTextField: UITextField!
     @IBOutlet weak var KdTextField: UITextField!
     @IBOutlet weak var velocity_label: UILabel!
-    @IBOutlet weak var throt_return_label: UILabel!
+//    @IBOutlet weak var throt_return_label: UILabel!
 //    var controlCenter: ControlCenter!
     public var backCamImage: CustomImage!
     public var worldCamDepth: CustomDepthData!

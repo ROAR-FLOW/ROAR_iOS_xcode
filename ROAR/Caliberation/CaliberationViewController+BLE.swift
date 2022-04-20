@@ -169,7 +169,7 @@ extension CaliberationViewController:CBCentralManagerDelegate, CBPeripheralDeleg
 //                self.throt_return_label.text = "Current throttle: \(throttle_decoded)"
 //            }
             DispatchQueue.main.async {
-                self.throt_return_label.text = "Current throttle: \(throttle_decoded)"
+//                self.throt_return_label.text = "Current throttle: \(throttle_decoded)"
                 self.velocity_label.text = "Current Velocity: \(velocity_decoded)"
             }
         }
