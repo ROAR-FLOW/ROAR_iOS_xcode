@@ -59,6 +59,11 @@ class CaliberationViewController: UIViewController {
     var rowIndex: Int = 0
     var run_program: Bool = false
     
+    var follow_x: Float = 0
+    var follow_y: Float = 0
+    var follow_z: Float = 0
+    
+    
     public var fileName = "data.csv";
     public var dataArray : [String] = []
     public var tmpArrayValue = String();
@@ -182,14 +187,16 @@ class CaliberationViewController: UIViewController {
                             //get from csv about followed car's location
                             // DistanceGPS
                             let target_error = 16.0 / 16
-                            let followed_location = (result[row:self.rowIndex][1]! as! Double) / 16
+//                            let followed_location = (result[row:self.rowIndex][1]! as! Double) / 16
+                            let followed_location = self.follow_z
+                            
                             print("location:\(followed_location)")
-                            print("current_car_location:\(self.current_location)")
+//                            print("current_car_location:\(self.current_location)")
                         
                             
                             self.rowIndex = self.rowIndex + 1
                             //current_location originally -10,followed start from 0
-                            self.distance_error_current = (followed_location - self.current_location) - target_error
+                            self.distance_error_current = (Double(followed_location) - self.current_location) - target_error
                             let d_error = (-self.distance_error_current + self.distance_error_before) / 0.1
                             print("de\(d_error)")
                             self.distance_error_integral += self.distance_error_current * 0.1
@@ -208,7 +215,9 @@ class CaliberationViewController: UIViewController {
                             if (throttle < -5.0) {
                                 throttle = -5.0
                             }
-                            let distance = followed_location - self.current_location
+                            //to delete
+                            throttle = 0
+                            let distance = Double(followed_location) - self.current_location
                           
                             
                             // // let csvHeader = "time,velocity,location,loc_followed,distance,error,kp,ki,kd\n"
