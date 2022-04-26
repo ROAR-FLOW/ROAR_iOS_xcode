@@ -96,34 +96,27 @@ extension CaliberationViewController:  ARSCNViewDelegate, ARSessionDelegate, ARS
         if AppInfo.sessionData.shouldCaliberate == true || AppInfo.sessionData.isCaliberated == false{
             for anchor in anchors {
                 guard let imageAnchor = anchor as? ARImageAnchor else { continue }
-//                if imageAnchor.name == "BerkeleyLogo" || imageAnchor.name == "campanille" {
-//                    session.setWorldOrigin(relativeTransform: imageAnchor.transform)
-//                    AppInfo.sessionData.isCaliberated = true
-//                    AppInfo.sessionData.shouldCaliberate = false
-//                    self.ipAddressBtn.isEnabled = true
-//                    self.ipAddressBtn.setTitle(findIPAddr(), for: .normal)
-//                    print(1)
-//                }
-                if imageAnchor.name == "BerkeleyLogo" {
-                    // imageAnchor.transform
-                    // logic here
-//                    print(imageAnchor.transform)
-//                    let position = SCNVector3(
-//                        imageAnchor.transform.columns.3.x,
-//                        imageAnchor.transform.columns.3.y,
-//                        imageAnchor.transform.columns.3.z
-//                    )
-                    self.follow_x = imageAnchor.transform.columns.3.x
-                    self.follow_y = imageAnchor.transform.columns.3.y
-                    self.follow_z = imageAnchor.transform.columns.3.z
-                    print("x:\(imageAnchor.transform.columns.3.x)") //左右，往左变大，往右变小
-                    print("y:\(imageAnchor.transform.columns.3.y)") // 上下，往上变小，往下变大
-                    print("z:\(imageAnchor.transform.columns.3.z)") // 前后， 往后变小，往前变大
-                    print("")
+                if imageAnchor.name == "BerkeleyLogo" || imageAnchor.name == "campanille" {
+                    session.setWorldOrigin(relativeTransform: imageAnchor.transform)
+                    AppInfo.sessionData.isCaliberated = true
+                    AppInfo.sessionData.shouldCaliberate = false
+                    print(1)
                 }
 
             }
         }
+        for anchor in anchors {
+            guard let imageAnchor = anchor as? ARImageAnchor else { continue }
+            if imageAnchor.name == "bear" {
+                self.follow_x = imageAnchor.transform.columns.3.x
+                self.follow_y = imageAnchor.transform.columns.3.y
+                self.follow_z = imageAnchor.transform.columns.3.z
+                print("x:\(imageAnchor.transform.columns.3.x)") //左右，往左变大，往右变小
+                print("y:\(imageAnchor.transform.columns.3.y)") // 上下，往上变小，往下变大
+                print("z:\(imageAnchor.transform.columns.3.z)") // 前后， 往后变小，往前变大
+                print("")
+        }
+    }
     }
 }
 
