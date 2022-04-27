@@ -108,12 +108,14 @@ extension CaliberationViewController:  ARSCNViewDelegate, ARSessionDelegate, ARS
         for anchor in anchors {
             guard let imageAnchor = anchor as? ARImageAnchor else { continue }
             if imageAnchor.name == "bear" {
-                self.follow_x = imageAnchor.transform.columns.3.x
-                self.follow_y = imageAnchor.transform.columns.3.y
-                self.follow_z = imageAnchor.transform.columns.3.z
-                print("x:\(imageAnchor.transform.columns.3.x)") //左右，往左变大，往右变小
-                print("y:\(imageAnchor.transform.columns.3.y)") // 上下，往上变小，往下变大
-                print("z:\(imageAnchor.transform.columns.3.z)") // 前后， 往后变小，往前变大
+                guard let camera = session.currentFrame?.camera else { return }
+                let cameraPosition = camera.transform.columns.3
+                self.follow_x = imageAnchor.transform.columns.3.x - cameraPosition.x
+                self.follow_y = imageAnchor.transform.columns.3.y - cameraPosition.y
+                self.follow_z = imageAnchor.transform.columns.3.z - cameraPosition.z
+                print("x:\(self.follow_x * 100)") //左右，往左变大，往右变小
+                print("y:\(self.follow_y * 100)") // 上下，往上变小，往下变大
+                print("z:\(self.follow_z * 100)") // 前后， 往后变小，往前变大
                 print("")
         }
     }
