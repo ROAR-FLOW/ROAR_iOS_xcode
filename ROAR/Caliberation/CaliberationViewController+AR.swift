@@ -119,6 +119,5 @@ extension CaliberationViewController:  ARSCNViewDelegate, ARSessionDelegate, ARS
                 print("")
         }
     }
-    }
 }
 
