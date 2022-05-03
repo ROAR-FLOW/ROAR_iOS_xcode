@@ -96,7 +96,7 @@ extension CaliberationViewController:  ARSCNViewDelegate, ARSessionDelegate, ARS
         if AppInfo.sessionData.shouldCaliberate == true || AppInfo.sessionData.isCaliberated == false{
             for anchor in anchors {
                 guard let imageAnchor = anchor as? ARImageAnchor else { continue }
-                if imageAnchor.name == "BerkeleyLogo" || imageAnchor.name == "campanille" {
+                if imageAnchor.name == "BerkeleyLogo" {
                     session.setWorldOrigin(relativeTransform: imageAnchor.transform)
                     AppInfo.sessionData.isCaliberated = true
                     AppInfo.sessionData.shouldCaliberate = false
@@ -107,7 +107,7 @@ extension CaliberationViewController:  ARSCNViewDelegate, ARSessionDelegate, ARS
         }
         for anchor in anchors {
             guard let imageAnchor = anchor as? ARImageAnchor else { continue }
-            if imageAnchor.name == "bear" {
+            if imageAnchor.name == "campanille" {
                 guard let camera = session.currentFrame?.camera else { return }
                 let cameraPosition = camera.transform.columns.3
                 self.follow_x = imageAnchor.transform.columns.3.x - cameraPosition.x

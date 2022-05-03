@@ -182,11 +182,12 @@ class CaliberationViewController: UIViewController {
                         //change the total running time here
                         if self.run_program && rowIndex <= 2300 {
                             self.current_time += 0.1
-                            self.current_location = 0.1 * self.velocity + self.current_location
+//                            self.current_location = 0.1 * self.velocity + self.current_location
                             
                             //get from csv about followed car's location
                             // DistanceGPS
-                            let target_error = 16.0 / 16
+                            //0.5
+                            let target_error = 0.70
 //                            let followed_location = (result[row:self.rowIndex][1]! as! Double) / 16
                             let followed_location = self.follow_z
                             
@@ -194,29 +195,31 @@ class CaliberationViewController: UIViewController {
 //                            print("current_car_location:\(self.current_location)")
                         
                             
-                            self.rowIndex = self.rowIndex + 1
+//                            self.rowIndex = self.rowIndex + 1
                             //current_location originally -10,followed start from 0
-                            self.distance_error_current = (Double(followed_location) - self.current_location) - target_error
+//                            self.distance_error_current = (Double(followed_location) - self.current_location) - target_error
+                            self.distance_error_current = abs(Double(self.follow_y)) - target_error
                             let d_error = (-self.distance_error_current + self.distance_error_before) / 0.1
                             print("de\(d_error)")
+                            print("distance\(self.follow_z)")
                             self.distance_error_integral += self.distance_error_current * 0.1
                             
                             self.distance_error_before = self.distance_error_current
                             
                             print("error:\(distance_error_current)")
-                            let kp = 5.0
+                            //5.0
+                            let kp = 3.0
                             let ki = 0.0
                             let kd = 0.15
                             //throttle is target speed
                             throttle = kp * self.distance_error_current + kd * d_error + ki * self.distance_error_integral
+                            print("throttle\(throttle)")
                             if throttle > 5{
                                 throttle = 3.0
                             }
                             if (throttle < -5.0) {
                                 throttle = -5.0
                             }
-                            //to delete
-                            throttle = 0
                             let distance = Double(followed_location) - self.current_location
                           
                             
